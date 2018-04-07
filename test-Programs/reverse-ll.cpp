@@ -71,7 +71,7 @@ void reverse (sll *list) {
     return;
 }
 
-
+#if 0
 int main() {
     sll list = sll();
     list.insert(2);
@@ -82,3 +82,5 @@ int main() {
     reverse(&list);
     list.show();
 }
+
+#endif
