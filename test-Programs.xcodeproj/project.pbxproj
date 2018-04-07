@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E16F342F206BEC1400F3224F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E16F342E206BEC1400F3224F /* main.cpp */; };
+		E1199D7220792F25007C40B7 /* dynamic-progamming.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E1199D7020792F25007C40B7 /* dynamic-progamming.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -23,8 +23,17 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E1199D7020792F25007C40B7 /* dynamic-progamming.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "dynamic-progamming.cpp"; sourceTree = "<group>"; };
+		E1199D7120792F25007C40B7 /* dynamic-progamming.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = "dynamic-progamming.hpp"; sourceTree = "<group>"; };
+		E15A70912071586300228C6C /* quicksort.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = quicksort.cpp; sourceTree = "<group>"; };
+		E15A70922071586300228C6C /* quicksort.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = quicksort.hpp; sourceTree = "<group>"; };
 		E16F342B206BEC1400F3224F /* test-Programs */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "test-Programs"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E16F342E206BEC1400F3224F /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		E16F342E206BEC1400F3224F /* bin-search.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "bin-search.cpp"; sourceTree = "<group>"; };
+		E174BA15206FFC5A00A4E619 /* LeadingZero.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LeadingZero.cpp; sourceTree = "<group>"; };
+		E174BA16206FFC5A00A4E619 /* LeadingZero.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = LeadingZero.hpp; sourceTree = "<group>"; };
+		E174BA18206FFD9C00A4E619 /* reverse-ll.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "reverse-ll.cpp"; sourceTree = "<group>"; };
+		E1A6DC3F20783429003DEB18 /* String-algos.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "String-algos.cpp"; sourceTree = "<group>"; };
+		E1A6DC4020783429003DEB18 /* String-algos.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = "String-algos.hpp"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,7 +66,16 @@
 		E16F342D206BEC1400F3224F /* test-Programs */ = {
 			isa = PBXGroup;
 			children = (
-				E16F342E206BEC1400F3224F /* main.cpp */,
+				E16F342E206BEC1400F3224F /* bin-search.cpp */,
+				E174BA18206FFD9C00A4E619 /* reverse-ll.cpp */,
+				E174BA15206FFC5A00A4E619 /* LeadingZero.cpp */,
+				E174BA16206FFC5A00A4E619 /* LeadingZero.hpp */,
+				E15A70912071586300228C6C /* quicksort.cpp */,
+				E15A70922071586300228C6C /* quicksort.hpp */,
+				E1A6DC3F20783429003DEB18 /* String-algos.cpp */,
+				E1A6DC4020783429003DEB18 /* String-algos.hpp */,
+				E1199D7020792F25007C40B7 /* dynamic-progamming.cpp */,
+				E1199D7120792F25007C40B7 /* dynamic-progamming.hpp */,
 			);
 			path = "test-Programs";
 			sourceTree = "<group>";
@@ -118,7 +136,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E16F342F206BEC1400F3224F /* main.cpp in Sources */,
+				E1199D7220792F25007C40B7 /* dynamic-progamming.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -237,6 +255,7 @@
 				E16F3434206BEC1400F3224F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
