@@ -9,6 +9,7 @@
 #include <iostream>
 #include <thread>
 #include <mutex>
+#include <array>
 
 
 using namespace std;
@@ -30,30 +31,54 @@ private:
     
     int _n;
     std::mutex _mutex;
+    std::array<std::condition_variable, 4> _cond;
+
     
 public:
     number(int n) : _n(n) {}
     
     
-    void run (bool devby3, bool devby5) {
-        std::unique_lock<std::mutex> lock(_mutex);
+    void run (int tname, bool devby3, bool devby5) {
+        
         static int current = 1;
 
-        if (current > _n) {
-            return;
-        }
-        if ((current % 3 == 0) == devby3 &&
-            (current % 5 == 0) == devby5) {
-            std::cout << "FizzBuzz" << std::endl;
+        while (current <= _n) {
+            
+            switch (tname) {
+            case 1:
+            {
+                std::unique_lock<std::mutex> lock(_mutex);
+                if ((current % 3 == 0) == devby3 &&
+                    (current % 5 == 0) == devby5) {
+                    std::cout << "FizzBuzz" << std::endl;
+                    current++;
+                }
+            }
+            case 2:
+            {
+                std::unique_lock<std::mutex> lock(_mutex);
+                if ((current % 3 == 0) == devby3) {
+                    std::cout << "Fizz" << std::endl;
+                    current++;
+                }
+            }
+            case 3:
+            {
+                std::unique_lock<std::mutex> lock(_mutex);
+                if ((current % 5 == 0) == devby5) {
+                    std::cout << "Buzz" << std::endl;
+                    current++;
+                }
+            }
+            case 4:
+            {
+                std::unique_lock<std::mutex> lock(_mutex);
+                std::cout << current << std::endl;
+                current++;
+            }
+            }
         }
 
-        if ((current % 3 == 0) == devby3) {
-            std::cout << "Fizz" << std::endl;
-        }
-        if ((current % 5 == 0) == devby5) {
-            std::cout << "Buzz" << std::endl;
-        }
-        current++;
     }
 };
 
@@ -62,9 +87,14 @@ int main() {
     
     number *n1 = new number(15);
     
-    std::thread T1(&number::run, n1, true, true);
-    std::thread T2(&number::run, n1, true, false);
-    std::thread T3(&number::run, n1, false, true);
-    std::thread T4(&number::run, n1, false, false);
+    std::thread T1(&number::run, n1, 1, true, true);
+    std::thread T2(&number::run, n1, 2, true, false);
+    std::thread T3(&number::run, n1, 3, false, true);
+    std::thread T4(&number::run, n1, 4, false, false);
     
+    
+    if (T1.joinable()) T1.join();
+    if (T2.joinable()) T2.join();
+    if (T3.joinable()) T3.join();
+    if (T4.joinable()) T4.join();
 }
