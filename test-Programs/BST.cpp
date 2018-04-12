@@ -96,6 +96,27 @@ node* BST::nextNode (node *root) {
     }
 }
 
+
+// Write an algo to check if the BST is balanced:
+//        Left and Right subtree height differ by no more than 1.
+//        Get the height of the Sub tree: get the height of the ST + 1;
+
+int getHeight(node *root) {
+    if (!root) return -1;
+    
+    return max(getHeight(root->left), getHeight(root->right)) + 1;
+}
+
+bool isBalanced(node *root) {
+    return std::abs(getHeight(root->left) - getHeight(root->right)) <= 1;
+}
+
+
+
+
+
+
+
 int main() {
     
     int arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
