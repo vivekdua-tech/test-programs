@@ -13,6 +13,8 @@
 
 // Implement Topo Sort - Order the project/process dependencies and launch accordingly
 
+using namespace std;
+
 
 class graph {
 
@@ -29,17 +31,26 @@ public:
 
 
 // return the ID of the vertices
-std::map<int, int> getIndegree(graph g) {
-    std::map<int, int> id;
+void getIndegree(graph g,
+                 std::map<int, int> id) {
+    
+    // Init the ID to zero for all nodes.
+    for (auto &element : g.vertices) {
+        id.insert(pair<int, int>(element, 0));
+    }
     
     // Build the indegree of the vertices
-    for (auto &i : g.adj) {
-        if (id.find(i.first) != id.end()) {
-            id.insert(std::pair<int, int>(i.first, i.second.size()));
+    for (auto &adj : g.adj) {
+        list<int> adjList = adj.second;
+        
+        for (auto &listElement : adjList) {
+            id[listElement]++;
         }
-    }
-    return id;
+     }
+    return;
 }
+
+
 
 
 std::list<int> buildListWithZeroIndegree(graph g) {
@@ -61,37 +72,41 @@ std::list<int> orderVertices (graph g) {
     // Add the ZID nodes again
     
     list<int> orderedList;
-    
     int v = 0;
     size_t size = g.vertices.size();
+    orderedList = buildListWithZeroIndegree(g);
+    list<int> order = orderedList;
+    map<int, int> idegMap;
+    getIndegree(g, idegMap);
+    
+    
     while (v < size) {
-        list<int> order;
         
-        order = buildListWithZeroIndegree(g);
-        
-        if (!order) {
+        if (!orderedList.size()) {
             // cycle detected here. no nodes with ZID
-            return list();
+            return list<int>();
         }
         
-        orderedList += order;
-        
-        for (auto &v : order) {
+        for (auto &zidnode : orderedList) {
             // Remove these dependencies from the graph
-            for (auto &list : g.adj) {
-                if (list.find(v) != list.end()) {
-                    // decrement the dependencies;
-                    list.erase(v);
-                }
-                if (!list.size()) {
-                    // remove the entry.
-                    g.adj.remove(v);
+            for (auto &adj : g.adj) {
+                int node = adj.first;
+                list<int> adjList = adj.second;
+                for (auto &dep : adjList) {
+                    if (dep == zidnode) {
+                        if (idegMap[dep] == 1) {
+                            // add this node to the orderedList
+                            orderedList.push_back(node);
+                            order.push_back(node);
+                        } else {
+                            idegMap[dep]--;
+                        }
+                    }
                 }
             }
-        }
-        
-        v += order.size();
+            orderedList.remove(zidnode);
+            v++;
+         }
     }
+    return order;
 }
-
-
