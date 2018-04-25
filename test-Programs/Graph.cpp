@@ -20,8 +20,8 @@ class graph {
 
 public:
     
-    std::list<int> vertices;
-    std::map<int, std::list<int>> adj;
+    std::list<int> _vertices;
+    std::map<int, std::list<int>> _adj;
     
 };
 
@@ -32,34 +32,28 @@ public:
 
 // return the ID of the vertices
 void getIndegree(graph g,
-                 std::map<int, int> id) {
-    
-    // Init the ID to zero for all nodes.
-    for (auto &element : g.vertices) {
-        id.insert(pair<int, int>(element, 0));
-    }
+                 std::map<int, int> &id) {
     
     // Build the indegree of the vertices
-    for (auto &adj : g.adj) {
+    for (auto &adj : g._adj) {
         list<int> adjList = adj.second;
-        
-        for (auto &listElement : adjList) {
-            id[listElement]++;
+        if (id.find(adj.first) == id.end()) {
+            id.insert(pair<int, int>(adj.first, 0));
         }
+        id[adj.first] += adjList.size();
      }
     return;
 }
 
 
 
-
 std::list<int> buildListWithZeroIndegree(graph g) {
     std::list<int> zigList;
     
-    for (auto &v : g.vertices) {
+    for (auto &v : g._vertices) {
         // If the vertices does not exist in the map; it is ZID
-        if (g.adj.find(v) == g.adj.end()) {
-            zigList.push_front(v);
+        if (g._adj.find(v) == g._adj.end()) {
+            zigList.push_back(v);
         }
     }
     return zigList;
@@ -73,7 +67,7 @@ std::list<int> orderVertices (graph g) {
     
     list<int> orderedList;
     int v = 0;
-    size_t size = g.vertices.size();
+    size_t size = g._vertices.size();
     orderedList = buildListWithZeroIndegree(g);
     list<int> order = orderedList;
     map<int, int> idegMap;
@@ -84,29 +78,61 @@ std::list<int> orderVertices (graph g) {
         
         if (!orderedList.size()) {
             // cycle detected here. no nodes with ZID
+            cout << "Cycle detected " << endl;
             return list<int>();
         }
-        
-        for (auto &zidnode : orderedList) {
-            // Remove these dependencies from the graph
-            for (auto &adj : g.adj) {
+        int prevZidnode = 0;
+        for (auto zidnode : orderedList) {
+            // Remove the visited node.
+            orderedList.remove(prevZidnode);
+            for (auto &adj : g._adj) {
                 int node = adj.first;
                 list<int> adjList = adj.second;
-                for (auto &dep : adjList) {
+                for (auto dep : adjList) {
                     if (dep == zidnode) {
-                        if (idegMap[dep] == 1) {
+                        idegMap[node]--;
+                        if (idegMap[node] == 0) {
                             // add this node to the orderedList
                             orderedList.push_back(node);
                             order.push_back(node);
-                        } else {
-                            idegMap[dep]--;
                         }
                     }
                 }
             }
-            orderedList.remove(zidnode);
+            prevZidnode = zidnode;
             v++;
-         }
+        }
+        orderedList.remove(prevZidnode);
     }
     return order;
+}
+
+
+int main() {
+    
+    list<int> vertices = {5, 7, 3, 12, 56, 13, 9, 4};
+    list<int> node5List = {13, 56};
+    list<int> node12List = {13, 9};
+    list<int> node56List = {7, 3, 4};
+    list<int> node4List = {56};
+    list<int> node3List = {4};
+    
+    
+    map<int, list<int>> adj;
+    adj.insert(pair<int, list<int>>(5, node5List));
+    adj.insert(pair<int, list<int>>(12, node12List));
+    adj.insert(pair<int, list<int>>(56, node56List));
+    adj.insert(pair<int, list<int>>(4, node4List));
+    adj.insert(pair<int, list<int>>(3, node3List));
+    
+    graph g;
+    g._vertices = vertices;
+    g._adj = adj;
+    // Order the vertices
+    list<int> orderedVert = orderVertices(g);
+    cout << "Order is " << endl;
+    for (auto &v : orderedVert) {
+        cout << v << " ";
+    }
+    
 }
