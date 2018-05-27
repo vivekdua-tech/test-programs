@@ -16,7 +16,7 @@ using namespace std;
 
 // FLEXMASK(X, Y) -> 00001111100000 x and y bit posn have 1's.
 #define FLEXMASK(X, Y) \
-    MASK((X)) ^ MASK((Y - 1))
+    MASK((X)) ^ MASK((Y))
 
 #define INVERSEFLEXMASK(X, Y) ~FLEXMASK((X), (Y))
 
@@ -27,6 +27,15 @@ using namespace std;
 
 int main ()
 {
+    
+    cout << "mask(2): " << hex <<
+    MASK(2);
+    
+    int flex = FLEXMASK(2, 5);
+    cout << "Flexmask(2, 5): " << hex << flex;
+    
+#if 0
+    
     int m = 0x0a0a0a0a;
     int n = 0xe;
     
@@ -59,9 +68,8 @@ int main ()
     value3 << endl;
     
     
-    
-    
     cout << "Value is" << hex << result << endl;
+#endif
     
 }
 

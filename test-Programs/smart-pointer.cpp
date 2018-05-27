@@ -31,7 +31,6 @@ protected:
     
 public:
     
-    
     // Constructor : shared_ptr<string>(new string()) :
     smartPointer(T *ptr) {
         ref = ptr;
