@@ -60,10 +60,11 @@ std::list<int> buildListWithZeroIndegree(graph g) {
 }
                       
 std::list<int> orderVertices (graph g) {
-    // Iterate through the vertices
-    // Add the ZID nodes to the ordered vector
-    // Remove the dependencies of the ZID nodes from the map
-    // Add the ZID nodes again
+    // Iterate through all the vertices
+    // Add the ZID vertices to the ordered vector
+    // Remove the dependencies of the ZID vertices from the map
+    // Add the ZID vertices again
+    // Anytime if the ZID vertices return no more nodes but still vertices left to be traversed - cyclcic graph.
     
     list<int> orderedList;
     int v = 0;
@@ -79,7 +80,7 @@ std::list<int> orderVertices (graph g) {
         if (!orderedList.size()) {
             // cycle detected here. no nodes with ZID
             cout << "Cycle detected " << endl;
-            return list<int>();
+            return order;
         }
         int prevZidnode = 0;
         for (auto zidnode : orderedList) {

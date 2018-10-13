@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <stack>
+#include <vector>
 
 using namespace std;
 
@@ -46,6 +47,9 @@ void reverse (sll *list) {
     
     std::stack<node*> nodeStack;
     
+    if (!list->head) {
+        return;
+    }
     // Put entries in the stack and pop it out and set the next node entries accordingly.
     node *temp = list->head;
     while (temp != nullptr) {
@@ -71,16 +75,34 @@ void reverse (sll *list) {
     return;
 }
 
-#if 0
 int main() {
+#if 0
     sll list = sll();
     list.insert(2);
     list.insert(3);
     list.insert(4);
+    list.insert(5);
+    list.insert(6);
     list.show();
     
     reverse(&list);
     list.show();
-}
-
 #endif
+    vector<long> vec = {3, 4, 5, 2, 3, 6};
+    auto bit = vec.begin() + 1;
+    auto eit = vec.begin() + 2;
+    cout << "min: " << *min_element(bit, eit);
+    
+    
+#if 0
+    for (unsigned int index = 0; index < vec.size() - 1; index++) {
+        swap(vec[index], vec[index + 1]);
+    }
+    cout << "vector is: " << endl;
+    for (auto i : vec) {
+        cout <<  " " << i;
+    }
+#endif
+    
+    
+}

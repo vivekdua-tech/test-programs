@@ -11,7 +11,7 @@
 
 using namespace std;
 
-int binary_search_iterative(int A[], int key, int len){
+int binary_search_iterative(int A[], int key, int len) {
     
     int low = 0;
     int high = len - 1;
