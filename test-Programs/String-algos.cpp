@@ -28,7 +28,7 @@ void ReverseWords (string wordList, string delimiter)
     stack<string> strStack;
 
     while (pos != std::string::npos) {
-        string word = wordList.substr(0, pos + delimiter.length());
+        string word = wordList.substr(0, pos);
         strStack.push(word);
         wordList.erase(0, pos + delimiter.length());
         pos = wordList.find(delimiter);
@@ -38,6 +38,9 @@ void ReverseWords (string wordList, string delimiter)
     }
     while (!strStack.empty()) {
         cout << strStack.top();
+        if (strStack.size() > 1) {
+            cout << delimiter;
+        }
         strStack.pop();
     }
 }
@@ -45,8 +48,8 @@ void ReverseWords (string wordList, string delimiter)
 
 int main() {
     
-    string wordlist = "Do not try this.";
-    ReverseWords(wordlist, " ");
+    string wordlist = "Do..not..try..this";
+    ReverseWords(wordlist, "..");
     return 0;
     
 }
