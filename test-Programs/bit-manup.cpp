@@ -7,71 +7,85 @@
 //
 
 #include <iostream>
+#include <math.h>
+
 
 using namespace std;
 
 
 #define MASK(N) \
-    ~(~0 << N)
+    ((0x1 << N) - 1)
 
 // FLEXMASK(X, Y) -> 00001111100000 x and y bit posn have 1's.
 #define FLEXMASK(X, Y) \
-    MASK((X)) ^ MASK((Y))
+    (MASK((X)) ^ MASK((Y)))
 
 #define INVERSEFLEXMASK(X, Y) ~FLEXMASK((X), (Y))
 
-//Insert M in N at bit posn X to Y
-#define INSERTVALUE(M, N, X, Y) \
-    (((M) & INVERSEFLEXMASK((X), (Y))) |  (((N) << (Y))))
+// Clear bits X to Y in M
+#define CLEARBITS(M, X, Y)   \
+    ((M) & INVERSEFLEXMASK((X), (Y)))
 
+// left shift by Y bits
+#define LSHIFT(N, Y) \
+    ((N) << (Y))
+
+//Insert N in M at bit posn X to Y
+#define INSERTVALUE(M, N, X, Y) \
+     CLEARBITS(M, X, Y) | LSHIFT(N, Y)
+
+int insertNinM(int m, int n, int x, int y) {
+    
+    cout << "mask(4): " << hex << MASK(4) << endl;
+    
+    int flex = FLEXMASK(4, 8);
+    cout << "Flexmask(2, 7): " << hex << flex << endl;
+    
+    int result = INSERTVALUE(m, n, x, y);
+    
+    int clear = CLEARBITS(m, x, y);
+    
+    int ls = LSHIFT(n, y);
+    
+    cout << "clear is:" << hex << clear << endl;
+    
+    cout << "ls is:" << hex << ls << endl;
+    
+    cout << "Value is" << hex << result << endl;
+    
+    return 0;
+    
+}
+
+// Write a function to determine the number of bits you would need to flip to convert integer A to integer B.
+// This seemingly complex problem is actually rather straightforward.To approach this, ask yourself how you would
+// figure out which bits in two numbers are different. Simple: with an XOR.
+
+int numBitSet(int n) {
+    int count = 0;
+    for (int i = n; i != 0; i &= i - 1) {
+        count++;
+    }
+    return count;
+}
+// a function to determine the number of bits you would need to flip to convert integer A to integer B.
+int numBitSwapRequired(int m, int n) {
+    return numBitSet(m ^ n);
+}
 
 int main ()
 {
     
-    cout << "mask(2): " << hex <<
-    MASK(2);
-    
-    int flex = FLEXMASK(2, 5);
-    cout << "Flexmask(2, 5): " << hex << flex;
-    
-#if 0
-    
     int m = 0x0a0a0a0a;
-    int n = 0xe;
-    
-    int result = INSERTVALUE(m, n, 8, 5);
-    
-    
-    int mask = FLEXMASK(8, 5);
-    
-    cout << "flex mask is" << hex <<
-    mask << endl;
-    
-    int invmask = INVERSEFLEXMASK(8, 5);
-    
-    
-    cout << "inverse flex mask is" << hex <<
-    invmask << endl;
-    
-    int value1 = m & invmask;
-    
-    cout << "value1 is : " << hex << value1 << endl;
-    
-    int value2 = n << 5;
-    
-    cout << "value2 is : " << hex << value2 << endl;
-    
-    
-    int value3 = value1 | value2;
-    
-    cout << " OR of value1 and value2 is" << hex <<
-    value3 << endl;
-    
-    
-    cout << "Value is" << hex << result << endl;
-#endif
+    // int n = 0xe;
+    cout << "num bit set:" << numBitSet(m) << endl;
+    return 0;
+    // Insert N in M at bit posn X to Y ; X > Y
+    // return insertNinM(m, n, 8, 4);
     
 }
+
+
 
 
 

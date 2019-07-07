@@ -16,7 +16,7 @@ int binary_search_iterative(int A[], int key, int len) {
     int low = 0;
     int high = len - 1;
     
-    while(low <= high) {
+    while (low <= high) {
     
         int mid = low + (high - low)/2;
         if (A[mid] == key) {

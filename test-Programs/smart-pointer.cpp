@@ -46,7 +46,6 @@ public:
         ++(*ref_count);
         
     }
-    
     // Assignment operator
     // shared_ptr ptr1;
     // shared_ptr ptr2;
@@ -66,4 +65,19 @@ public:
         return ref;
     }
     
+    size_t refCount() {
+        return *ref_count;
+    }
 };
+
+
+int main()
+{
+    
+    smartPointer<string> sptr(new string("hello"));
+    smartPointer<string> sptr1 = sptr;
+    
+    cout << "Ref-count of sptr is:" << sptr->refCount();
+    cout << "Ref-count of sptr1 is:" << sptr1->refCount();
+    
+}

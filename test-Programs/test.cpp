@@ -59,8 +59,44 @@ int stringReduction(string s) {
     return shortStr(s).length();
 }
 
+
+
+class A {
+private:
+    int _a;
+public:
+    A() {
+        cout << "class A cons called" << endl;
+    }
+};
+
+class B : public A {
+private:
+    int _b;
+public:
+    B() {
+        cout << "class B cons called" << endl;
+    }
+};
+
+class C : public B {
+private:
+    int _c;
+public:
+    C() {
+        cout << "class C cons called" << endl;
+    }
+};
+
+
+
 int main()
 {
+  
+    C cobj;
+    
+    
+#if 0
     mapStr.insert(pair<string, string>(string("ab"), string("c")));
     mapStr.insert(pair<string, string>(string("ac"), string("b")));
     mapStr.insert(pair<string, string>(string("ba"), string("c")));
@@ -73,5 +109,6 @@ int main()
     int result = stringReduction(s);
     cout << " Result: " << result << endl;
     
+#endif
     return 0;
 }

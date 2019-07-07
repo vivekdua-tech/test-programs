@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <map>
+#include <unordered_map>
 
 
 using namespace std;
@@ -41,6 +42,7 @@ public:
     
 };
 
+// Returns num of iterations called on count
 
 void count (int n, way pway, map<way, int> &wayMap) {
     
@@ -48,9 +50,12 @@ void count (int n, way pway, map<way, int> &wayMap) {
     way  currentWay = pway;
     
     if (n == 0) {
-        if (wayMap.find(pway) == wayMap.end()) {
+        auto it = wayMap.find(pway);
+        if (it == wayMap.end()) {
             // add it now
             wayMap.insert(pair<way, int>(pway, 1));
+        } else {
+            it->second++;
         }
         return;
     }

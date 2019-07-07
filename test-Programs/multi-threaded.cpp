@@ -86,7 +86,7 @@ public:
 int main() {
     
     number *n1 = new number(15);
-    
+    // std::thread t1(&object::run, object-ptr, args1, args2..);
     std::thread T1(&number::run, n1, 1, true, true);
     std::thread T2(&number::run, n1, 2, true, false);
     std::thread T3(&number::run, n1, 3, false, true);
