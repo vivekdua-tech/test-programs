@@ -10,6 +10,8 @@
 #include <thread>
 #include <mutex>
 #include <array>
+#include <future>
+#include <vector>
 
 
 using namespace std;
@@ -32,6 +34,10 @@ private:
     int _n;
     std::mutex _mutex;
     std::array<std::condition_variable, 4> _cond;
+    bool thread_1_done = false;
+    bool thread_2_done = false;
+    bool thread_3_done = false;
+    bool thread_4_done = false;
 
     
 public:
@@ -48,37 +54,87 @@ public:
             case 1:
             {
                 std::unique_lock<std::mutex> lock(_mutex);
+                _cond[1].wait(lock, [this]() { return thread_3_done; });
                 if ((current % 3 == 0) == devby3 &&
                     (current % 5 == 0) == devby5) {
-                    std::cout << "FizzBuzz" << std::endl;
-                    current++;
+                    std::cout << "Thread-1: " << current << "FizzBuzz" << std::endl;
                 }
+                thread_1_done = true;
+                _cond[2].notify_one();
+                break;
             }
             case 2:
             {
                 std::unique_lock<std::mutex> lock(_mutex);
                 if ((current % 3 == 0) == devby3) {
-                    std::cout << "Fizz" << std::endl;
-                    current++;
+                    std::cout << "Thread-2: " << current << "Fizz" << std::endl;
                 }
+                thread_2_done = true;
+                _cond[0].notify_one();
+                break;
             }
             case 3:
             {
                 std::unique_lock<std::mutex> lock(_mutex);
+                _cond[0].wait(lock, [this]() { return thread_2_done; });
                 if ((current % 5 == 0) == devby5) {
-                    std::cout << "Buzz" << std::endl;
-                    current++;
+                    std::cout << "Thread-3: " << current << "Buzz" << std::endl;
                 }
+                thread_3_done = true;
+                _cond[1].notify_one();
+                break;
             }
             case 4:
             {
                 std::unique_lock<std::mutex> lock(_mutex);
-                std::cout << current << std::endl;
+                _cond[2].wait(lock, [this](){ return thread_1_done; });
+                if ((current % 3 == 0) == devby3 &&
+                    (current % 5 == 0) == devby5) {
+                    std::cout << "Thread-4: " << current << std::endl;
+                }
                 current++;
+                break;
             }
             }
         }
 
+    }
+};
+
+// use futures for single shot event communications
+
+std::promise<int> _promise;
+
+class react {
+public:
+    void run () {
+        cout << "react called.." << endl;
+    }
+    react () {
+        run();
+    }
+};
+
+class detect {
+public:
+    int numThreads = 10;
+    void run () {
+        auto sf = _promise.get_future().share();
+        std::vector<std::thread> tvec;
+        
+        for (int i = 0; i < numThreads; i++) {
+            tvec.emplace_back([sf](){sf.wait(); react();});
+        }
+        _promise.set_value(1);
+        
+        for (auto &t : tvec) {
+            if (t.joinable()) {
+                t.join();
+            }
+        }
+    }
+    detect () {
+        run();
     }
 };
 
@@ -97,4 +153,9 @@ int main() {
     if (T2.joinable()) T2.join();
     if (T3.joinable()) T3.join();
     if (T4.joinable()) T4.join();
+    
+    
+    // Promise and future example
+    detect();
 }
+

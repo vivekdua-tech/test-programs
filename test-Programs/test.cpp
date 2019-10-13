@@ -6,9 +6,13 @@
 //  Copyright © 2018 Vivek Dua. All rights reserved.
 //
 
+#include <algorithm>
 #include <iostream>
 #include <string>
 #include <unordered_map>
+#include <vector>
+#include <queue>
+
 
 
 
@@ -89,11 +93,74 @@ public:
 };
 
 
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+};
+
+vector<vector<int>> levelOrder(TreeNode* root) {
+        queue<TreeNode*> bft_q;
+        vector<vector<int>> finalvec;
+        // BFT -
+        if (!root) {
+            return vector<vector<int>>();
+        }
+        bft_q.push(root);
+        bft_q.push(NULL);
+        vector<int> intvec;
+        
+        while (!bft_q.empty()) {
+            // pop the node and create a new vector for this level
+            TreeNode *node = bft_q.front();
+            intvec.push_back(node->left->val);
+            intvec.push_back(node->right->val);
+            bft_q.pop();
+            bft_q.push(node->left);
+            bft_q.push(node->right);
+            if (bft_q.front() == NULL) {
+                // reached marker - flush the vector and add new node to the Q
+                finalvec.push_back(intvec);
+                intvec.clear();
+                bft_q.pop();
+                bft_q.push(NULL);
+            }
+        }
+        return finalvec;
+}
 
 int main()
 {
-  
-    C cobj;
+    
+    // check if the string is palindrome - string can be having spaces and non-alphanumeric chars
+    // for palindrome checking we just need to check for alphnum chars only
+    // remove_if: Transforms the range [first,last) into a range with all the elements for which pred returns true removed,
+    // and returns an iterator to the new end of that range.
+    
+    // transform: Applies an operation sequentially to the elements of range inputted and stores the
+    // result in the range that begins at result which is inputted.
+    
+    string str = "Vivek, keviv";
+    // remove all non-alphanum
+    str.erase(std::remove_if(str.begin(), str.end(),
+                             [](unsigned char c){ return !isalnum(c); }), str.end());
+    // convert all into lower cases
+    transform(str.begin(), str.end(), str.begin(), [](unsigned char c){ return tolower(c);});
+    cout << "str is" << str;
+    string reversestr = str;
+    reverse(reversestr.begin(), reversestr.end());
+    cout << "Is this palindrome: " << ((reversestr == str) ? "Yes" : "No");
+    
+    
+    
+    // Level order traversal
+    queue<TreeNode*> bft_q;
+    
+    
+    
+    
+    
     
     
 #if 0

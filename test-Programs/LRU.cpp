@@ -14,6 +14,7 @@
 #include <algorithm>
 #include <set>
 #include <cassert>
+#include <memory>
 
 
 // LRU cache implementation -
@@ -41,7 +42,7 @@ struct Node{
 class Cache{
     
 protected:
-    map<int,Node*> mp; //map the key to the node in the linked list
+    map<int,shared_ptr<Node>> mp; //map the key to the node in the linked list
     int cp;  //capacity
     Node* tail; // double linked list tail pointer
     Node* head; // double linked list head pointer
@@ -54,8 +55,8 @@ class LRUCache : public Cache {
 public:
     
     LRUCache (int cap) {
-        head = NULL;
-        tail = NULL;
+        head = nullptr;
+        tail = nullptr;
         cp = cap;
     }
     
@@ -68,27 +69,26 @@ public:
         // if reached capacity then get the LRU and remove the same.
         if (cp == mp.size()) {
             // tail points to the LRU entry
-            Node *lru = tail;
+            Node* lru = tail;
             if (head == tail) {
                 // only entry
-                head = NULL;
-                tail = NULL;
+                head = nullptr;
+                tail = nullptr;
             } else {
                 tail = tail->prev;
                 if (tail) {
-                    tail->next = NULL;
+                    tail->next = nullptr;
                 }
             }
             mp.erase(lru->key);
-            delete lru;
         }
         // Now add the new entry - as a head - MRU Entry
-        Node *mru = new Node(key, value);
+        shared_ptr<Node> mru = make_shared<Node>(key, value);
         mru->next = head;
         if (head) {
-            head->prev = mru;
+            head->prev = mru.get();
         }
-        head = mru;
+        head = mru.get();
         if (!tail) {
             tail = head;
         }
@@ -97,38 +97,48 @@ public:
         if (it != mp.end()) {
             mp.erase(key);
         }
-        mp.insert(pair<int, Node*>(key, mru));
+        mp.insert(pair<int, shared_ptr<Node>>(key, mru));
     }
     
     int get (int key) override {
         auto it = mp.find(key);
         if (it != mp.end()) {
-            return it->second? it->second->value : -1;
+            return it->second != nullptr ? it->second->value : -1;
         }
         return -1;
     }
 };
 
 int main() {
-    int n, capacity,i;
+    int n, capacity,i, key;
     cout << "Enter the capacity:" << endl;
     cin >> n >> capacity;
     
     LRUCache l(capacity);
-    for ( i = 0 ; i < n ; i++) {
-        string command;
-        cin >> command;
-        if (command == "get") {
-            int key;
-            cin >> key;
-            cout << l.get(key) << endl;
-        }
-        else if (command == "set") {
+    for (i = 0 ; i < n ; i++) {
             int key, value;
+            cout << "Enter the (key value) pair in 2 3" << endl;
             cin >> key >> value;
             l.set(key,value);
+    }
+    cout << "Enter the key to get..." << endl;
+    cin >> key;
+    cout << l.get(key) << endl;
+    // test code
+    vector<int> intvec = {0, 1, 2, 3, 3, 4};
+    
+    for (vector<int>::const_iterator it = intvec.begin();
+         it != intvec.end();
+         it ++) {
+        if (it != intvec.begin() && *previt == *it) {
+            // delete this reference
+            intvec.erase(previt);
         }
+        previt = it;
     }
     return 0;
 }
+
+
+
 

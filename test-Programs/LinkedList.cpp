@@ -7,6 +7,8 @@
 //
 
 #include <iostream>
+#include <unordered_map>
+#include <unordered_set>
 
 using namespace std;
 
@@ -40,6 +42,19 @@ public:
         }
         p->next = n;
     }
+    void removeNode (node *prevNode, node* node) {
+        if (!node) {
+            return;
+        }
+        if (!prevNode) {
+            // head
+            head = node->next;
+            delete node;
+        } else {
+            prevNode->next = node->next;
+            delete node;
+        }
+    }
     
     void show () {
         node *temp = head;
@@ -51,6 +66,32 @@ public:
     }
 };
 
+// Remove a DUP node in the SLL
+
+void removeDuplicates (sll& lst) {
+    unordered_set<int> hashSet;
+    node *n = lst.head;
+    node *prevn = NULL;
+    
+    while (n != NULL) {
+        if (hashSet.find(n->value) != hashSet.end()) {
+            // found the DUP value
+            // remove this node
+            lst.removeNode(prevn, n);
+        } else {
+            // insert the value
+            hashSet.insert(n->value);
+        }
+        prevn = n;
+        n = n->next;
+    }
+}
+
+
+// Move front node from one list to the other.
+// src_list = { 2, 4, 5 }
+// dst_list = { 3, 6, 7}
+// dst_list becomes {2, 3, 6, 7} and the src_list becomes {4, 5}
 
 void moveNode(node **destNode, node **srcNode) {
     node *src = *srcNode;
@@ -84,6 +125,7 @@ sll SortedMerge(sll& first, sll& second) {
                 moveNode(&(tail->next), &si);
                 tail = tail->next;
             }
+            break;
         }
         // if no more elements in second
         if (si == nullptr) {
@@ -92,6 +134,7 @@ sll SortedMerge(sll& first, sll& second) {
                 moveNode(&(tail->next), &fi);
                 tail = tail->next;
             }
+            break;
         }
         
         if (fi->value < si->value) {
