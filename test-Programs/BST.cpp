@@ -100,6 +100,26 @@ void BST::inOrderTraversal(node *root) {
     if (root->right)
         inOrderTraversal(root->right);
 }
+// Iterative solution to inorder traversal -
+// Push elements of the left subtree in the stack - top will be the leftmost node.
+// for each node popped from the stack, push that node to the vector and then move to the
+// right sub-tree of the node.
+
+void BST::inorderTraversal (vector<int>& nodes, node* root) {
+    stack<node*> todo;
+    while (root || !todo.empty()) {
+        while (root) {
+            todo.push(root);
+            root = root -> left;
+        }
+        root = todo.top();
+        todo.pop();
+        nodes.push_back(root -> val);
+        root = root -> right;
+    }
+    return;
+}
+
 
 // Write an algo to get the next node in the BST - Binary search tree.
 
@@ -309,6 +329,12 @@ void BST2SDLL (dllnode *root, dllnode **head) {
 // Which ever node, their sub-tree diverges ( one on left and other on right ), that
 // is the LCA.
 
+// bool covers(node *root, node *p) {
+//     if (!root || !p) return false;
+//     if (root == p) return true;
+//     return covers(root->left, p) || covers(root->right, p);
+// }
+
 // node * getLCA(node *root, node *p, node *q) {
 //    bool pisonLeft = covers(root.left, p);
 //    bool qisonLeft = covers(root->left, q);
@@ -399,6 +425,79 @@ vector<vector<int>> levelOrder(node* root) {
     }
     return finalvec;
 }
+
+
+
+node *buildTree (vector<int> &preorder, vector<int> &inorder) {
+    // cache the inorder map of value to index: value->index
+    map<int, int> iomap;
+    int i = 0;
+    for (auto val : inorder) {
+        iomap.insert(pair<int, int>(val, i));
+    }
+    create(preorder, inorder, iomap, 0, preorder.size() - 1, 0, inorder.size() - 1);
+}
+
+node *create(vector<int>& preorder, vector<int> &inorder, map<int, int>& iomap,
+             int ps, int pe, int is, int ie) {
+    if (ps > pe) {
+        return nullptr;
+    }
+    node *node = new node(preorder[ps]);
+    map<int, int>::iterator it;
+    if ((it = iomap.find(node->value)) != iomap.end()) {
+        // found the root
+        pos = *it;
+    } else {
+        assert(0);
+    }
+    node->left = create(preorder, inorder, iomap, ps + 1, ps + pos - is, is, pos - 1);
+    node->right = create(preorder, inorder, iomap, pe - ie + pos + 1, pe, pos + 1, ie);
+    return node;
+}
+
+
+// Construct Binary Tree from Preorder and Inorder Traversal
+
+/********************************************************************************
+
+TreeNode *buildTree(vector<int> &preorder, vector<int> &inorder) {
+    return create(preorder, inorder, 0, preorder.size() - 1, 0, inorder.size() - 1);
+}
+
+TreeNode* create(vector<int>& preorder, vector<int>& inorder, int ps, int pe, int is, int ie){
+    if(ps > pe){
+        return nullptr;
+    }
+    TreeNode* node = new TreeNode(preorder[ps]);
+    int pos;
+    for(int i = is; i <= ie; i++){
+        if(inorder[i] == node->val){
+            pos = i;
+            break;
+        }
+    }
+    node->left = create(preorder, inorder, ps + 1, ps + pos - is, is, pos - 1);
+    node->right = create(preorder, inorder, pe - ie + pos + 1, pe, pos + 1, ie);
+    return node;
+}
+The first element in preorder array can divide inorder array into two parts.
+ Then we can divide preorder array into two parts. Make this element a node.
+ And the left sub-tree of this node is the left part, right sub-tree of this
+ node is the right part. This problem can be solved following this logic.
+
+ 
+ IO : [1,2,3,4,5,6,7]
+ PO:  [4,2,1,3,6,5,7]
+ 
+ step-1: partition IO and PO as follows. root as [4]
+ IO : LS as [1,2,3] and RS as [5,6,7]
+ PO:   LS as [2,1,3] and RS as [6,5,7]
+ 
+**********************************************************************************/
+
+
+
 
 int main() {
     
