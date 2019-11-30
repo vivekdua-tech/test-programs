@@ -135,6 +135,9 @@ int main()
     
     // check if the string is palindrome - string can be having spaces and non-alphanumeric chars
     // for palindrome checking we just need to check for alphnum chars only
+    // template <class ForwardIterator, class UnaryPredicate>
+    // ForwardIterator remove_if (ForwardIterator first, ForwardIterator last,
+    //                           UnaryPredicate pred);
     // remove_if: Transforms the range [first,last) into a range with all the elements for which pred returns true removed,
     // and returns an iterator to the new end of that range.
     
