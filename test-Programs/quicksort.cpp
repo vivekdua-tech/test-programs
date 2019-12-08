@@ -7,7 +7,7 @@
 //
 
 #include <iostream>
-
+#include <vector>
 
 
 using namespace std;
@@ -17,7 +17,7 @@ using namespace std;
 // elements to the right of the pivot.
 // {12, 7, 14, 9, 10, 11} - P, Q, U = arr[low]
 // pivot = arr[high].
-// iterate from low to high-1 and then if the element is smaller or equal to pivot
+// iterate from low to high and then if the element is smaller or equal to pivot
 //  increment the smaller element index and swap with the bigger element bucket index.
 
 int partition (int arr[], int low, int high)
@@ -26,7 +26,7 @@ int partition (int arr[], int low, int high)
     int pivot = arr[high];
     int small_bucket_index = low - 1;
     
-    for (int u = low; u < high - 1; u++) {
+    for (int u = low; u < high ; u++) {
         if (arr[u] <= pivot) {
             small_bucket_index++;
             // swap the smaller element with the first element of the bigger bucket
@@ -41,6 +41,7 @@ int partition (int arr[], int low, int high)
     return small_bucket_index + 1;
 }
 
+void printArray(int arr[], int size);
 
 // Given arr[] unsorted list of numbers, sort the numbers using quicksort.
 void quicksort (int arr[], int low, int high) {
@@ -52,7 +53,6 @@ void quicksort (int arr[], int low, int high) {
         // Get the partition index for the bucket assuming pivot as the last element.
         // Partition the array with the pivot as well.
         int pi = partition(arr, low, high);
-        
         // now recursively call with the new buckets.
         quicksort(arr, low, pi - 1);
         quicksort(arr, pi + 1, high);
@@ -72,11 +72,11 @@ void printArray(int arr[], int size)
 // Driver program to test above functions
 int main()
 {
-    int arr[] = {10, 7, 8, 9, 1, 5};
-    int n = sizeof(arr)/sizeof(arr[0]);
-    quicksort(arr, 0, n-1);
+    vector<int> arr = {10, 7, 8, 9, 1, 5, 5, 5, 8, 21, 19, 6, 2, 3};
+    size_t n = arr.size();
+    quicksort(arr.data(), 0, n-1);
     cout << " Sorted array..";
-    printArray(arr, n);
+    printArray(arr.data(), n);
     return 0;
 }
 

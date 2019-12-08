@@ -10,11 +10,35 @@
 #include <cstdlib>
 #include <iostream>
 #include <stack>
+#include <map>
 
 using namespace std;
 
 class Solution {
 public:
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        vector<int> vec;
+        map<int, int> fmap;
+        for (auto i : nums) {
+            auto it = fmap.find(i);
+            if (it == fmap.end()) {
+                fmap.insert(pair<int, int>(i, 1));
+            } else {
+                it->second++;
+            }
+        }
+        int i = 0;
+        for (auto it = fmap.begin();
+             it != fmap.end() && i < k;
+             it++, i++) {
+            vec.push_back(it->first);
+        }
+        return vec;
+    }
+    
+    
+    
+    
     vector<int> _nums;
     Solution(vector<int>& nums) {
         _nums = nums;
