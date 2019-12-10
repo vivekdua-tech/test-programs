@@ -36,6 +36,29 @@ public:
         return vec;
     }
     
+    vector<vector<int>> merge(vector<vector<int>>& intervals) {
+        vector<vector<int>> res;
+        sort(intervals.begin(), intervals.end(),
+             [&](vector<int>& interval1, vector<int>& interval2){
+                 return interval1.front() < interval2.front();
+             });
+        auto it = intervals.begin();
+        if (it != intervals.end()) {
+            res.push_back(*it);
+        } else {
+            return vector<vector<int>>();
+        }
+        
+        for (int i = 1;i < intervals.size(); i++) {
+            if (intervals[i][0] <= (res.back())[1]) {
+                // merge it
+                res.back().back() = intervals[i][1];
+            } else {
+                res.push_back(intervals[i]);
+            }
+        }
+        return res;
+    }
     
     
     
@@ -140,3 +163,60 @@ int main() {
      */
     
 }
+
+
+
+/****** Task Scheduler *********************************************************************
+ 
+ Given a char array representing tasks CPU need to do. It contains capital letters A to Z where
+ different letters represent different tasks. Tasks could be done without original order.
+ Each task could be done in one interval. For each interval, CPU could finish one task or
+ just be idle. However, there is a non-negative cooling interval n that means between two same tasks,
+ there must be at least n intervals that CPU are doing different tasks or just be idle.
+ 
+ You need to return the least number of intervals the CPU will take to finish all the given tasks.
+
+ Algorithm:
+ 
+First count the number of occurrences of each element.
+Let the max frequency seen be M for element E
+We can schedule the first M-1 occurrences of E, each E will be followed by at least N CPU cycles in
+ between successive schedules of E
+ Total CPU cycles after scheduling M-1 occurrences of E = (M-1) * (N + 1) // 1 comes for the CPU cycle for E itself
+Now schedule the final round of tasks. We will need at least 1 CPU cycle of the last occurrence of E. If there are multiple tasks with
+ frequency M, they will all need 1 more cycle.
+Run through the frequency dictionary and for every element which has frequency == M, add 1 cycle to result.
+If we have more number of tasks than the max slots we need as computed above we will return the length of the tasks array as we need
+ at least those many CPU cycles.
+*****************************************************************************************/
+
+
+class Solution {
+public:
+    int leastInterval(vector<char>& tasks, int n) {
+        unordered_map<char,int>mp;
+        int count = 0;
+        for(auto e : tasks)
+        {
+            mp[e]++;
+            count = max(count, mp[e]);
+        }
+        
+        int ans = (count-1)*(n+1);
+        for(auto e : mp) if(e.second == count) ans++;
+        return max((int)tasks.size(), ans);
+    }
+};
+
+/**************************************************
+Sum of Two Integers
+Use ^ and & to add two integers
+
+int getSum(int a, int b) {
+    return b==0? a:getSum(a^b, (a&b)<<1);
+    //be careful about the terminating condition;
+}
+**************************************************/
+
+
+

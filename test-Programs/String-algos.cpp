@@ -11,6 +11,7 @@
 #include <stack>
 #include <map>
 #include <vector>
+#include <unordered_map>
 
 
 using namespace std;
@@ -147,6 +148,49 @@ std::string trim (string& str) {
 //              ahead in both strings.
 //      b) Else, move ahead in both strings.
 
+
+
+
+/*****************************************************************
+   Longest non-repeating substr
+   abcaddfd
+   output = 3 for 'abc'
+ 
+
+
+ int lengthOfLongestSubstring(string s) {
+     vector<int> dict(256, -1);
+     int maxLen = 0, start = -1;
+     for (int i = 0; i != s.length(); i++) {
+         if (dict[s[i]] > start)
+             start = dict[s[i]];
+         dict[s[i]] = i;
+         maxLen = max(maxLen, i - start);
+     }
+     return maxLen;
+ }
+ ****************************************************************/
+
+vector<vector<string>> groupAnagrams(vector<string>& strs) {
+    unordered_map<string, vector<string>&> anamap;
+    vector<vector<string>> res;
+    for (auto s: strs) {
+        string tempstr = s;
+        sort(tempstr.begin(), tempstr.end());
+        auto it = anamap.find(tempstr);
+        if (it != anamap.end()) {
+            it->second.push_back(s);
+        } else {
+            vector<string> vstr;
+            vstr.push_back(s);
+            anamap.insert(pair<string, vector<string>&>(tempstr, vstr));
+        }
+    }
+    for (auto p : anamap) {
+        res.push_back(p.second);
+    }
+    return res;
+}
 
 
 int main() {

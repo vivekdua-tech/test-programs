@@ -18,33 +18,30 @@ pair<int, int> binary_search_iterative(int A[], int key, int len) {
     
     int low = 0;
     int high = len - 1;
-    int lowindex = 0, highindex = 0;
+    int lowindex = -1, highindex = -1;
     
-    while (low <= high) {
-        if (low == high) {
-            lowindex = low;
-        }
+    while (low < high) {
+        
         int mid = (low + high)/2;
         if (key <= A[mid]) {
-            high = mid - 1;
+            high = mid;
         } else {
             low = mid + 1;
         }
     }
+    lowindex = low;
     low = 0;
     high = len - 1;
-    while (low <= high) {
-        if (low == high) {
-            highindex = low;
-        }
+    while (low < high) {
+        
         int mid = (low + high)/2;
-        if (key >= A[mid]) {
-            low = mid + 1;
+        if (key < A[mid]) {
+            high = mid;
         } else {
-            high = mid - 1;
+            low = mid + 1;
         }
     }
-    
+    highindex = low - 1;
     return pair<int, int>(lowindex, highindex);
 }
 
@@ -78,8 +75,8 @@ int main(int argc, const char * argv[]) {
         // cout << i ;
     }
     
-    vector<int> vec1 = { 2, 3, 4, 5, 5, 5, 5, 5, 6, 6, 6, 7, 8, 9};
-    pair<int, int> tuple = ::binary_search_iterative(vec1.data(), 5, (int)vec1.size());
+    vector<int> vec1 = {5, 7, 7, 8, 8, 10};
+    pair<int, int> tuple = ::binary_search_iterative(vec1.data(), 8, (int)vec1.size());
     cout << "lookup index for the vector is: "
          << tuple.first << " " << tuple.second
          << endl;
