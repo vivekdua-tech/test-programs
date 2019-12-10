@@ -1,0 +1,193 @@
+The initialization function for this is
+
+int pthread_rwlock_init(pthread_rwlock_t *restrict rwlock,const pthread_rwlockattr_t *restrict attr);
+Where
+
+rwlock is the locking variable of the type pthread_rwlock_t
+attr is the attributes of the lock, which can be set to NULL for default attributes.
+
+
+
+Thus we can use the initialization function as
+
+pthread_rwlock_t rwlock;
+pthread_rwlock_init(rwlock,NULL);
+
+
+
+Once the lock is initialized we can lock a resource for writing using the function
+
+int pthread_rwlock_wrlock(pthread_rwlock_t *rwlock);
+
+
+
+Once the write lock is held no other process can access the resource until it is unlocked using
+
+int pthread_rwlock_unlock(pthread_rwlock_t *rwlock);
+
+
+
+To lock the resource only for reading and not writing we can use the function
+
+int pthread_rwlock_rdlock(pthread_rwlock_t *rwlock);
+
+
+
+Once the lock is held for reading, any number of other processes can access the resource of reading by locking the resource simultaneously. But the lock can not be held for writing, if it is already being held for reading. The lock can be unlocked using
+
+int pthread_rwlock_rdlock(pthread_rwlock_t *rwlock);
+
+
+
+To depict the working of rwlock let us look at the following example in which we create 4 threads, two for writing write_1,write_2, and two for reading,read_1,read_2.
+
+We try to lock the rwlock in the following order
+
+write_1->write_2->read_1->read_2
+
+
+
+According to the above order we should not be able to get lock in write_1 and write_2 simultaneously but we should be able to get the lock simultaneously for read_1 and read_2.
+
+#include <stdio.h>
+#include <pthread.h>
+#include <stdlib.h>
+pthread_rwlock_t rwlock;
+
+void * write(void *temp) {
+char *ret;
+FILE *file1;
+char *str;
+ret=pthread_rwlock_wrlock(&rwlock);
+printf("\nFile locked, please enter the message \n");
+str=(char *)malloc(10*sizeof(char));
+file1=fopen("temp","w");
+scanf("%s",str);
+fprintf(file1,"%s",str);
+fclose(file1);
+pthread_rwlock_unlock(&rwlock);
+printf("\nUnlocked the file you can read it now \n");
+return ret;
+}
+
+
+
+
+void * write_2(void *temp) {
+char *ret;
+FILE *file1;
+char *str;
+sleep(3);
+ret=pthread_rwlock_wrlock(&rwlock);
+printf("\nFile locked, please enter the message \n");
+str=(char *)malloc(10*sizeof(char));
+file1=fopen("temp","a");
+scanf("%s",str);
+fprintf(file1,"%s",str);
+fclose(file1);
+pthread_rwlock_unlock(&rwlock);
+printf("\nUnlocked the file you can read it now \n");
+return ret;
+}
+
+
+
+
+
+void * read_1(void *temp) {
+char *ret;
+FILE *file1;
+char *str;
+sleep(5);
+pthread_rwlock_rdlock(&rwlock);
+printf("\n1 Opening file for reading\n");
+file1=fopen("temp","r");
+str=(char *)malloc(10*sizeof(char));
+fscanf(file1,"%s",str);
+printf("\nMessage from file is %s \n",str);
+sleep(3);
+
+fclose(file1);
+printf("\nUnlocking rwlock\n");
+pthread_rwlock_unlock(&rwlock);
+return ret;
+}
+
+
+
+
+
+void * read_2(void *temp) {
+char *ret;
+FILE *file1;
+char *str;
+sleep(6);
+pthread_rwlock_rdlock(&rwlock);
+printf("\n2 Opening file for reading\n");
+file1=fopen("temp","r");
+str=(char *)malloc(10*sizeof(char));
+fscanf(file1,"%s",str);
+printf("\nMessage from file is %s \n",str);
+
+fclose(file1);
+
+pthread_rwlock_rdlock(&rwlock);
+
+return ret;
+}
+
+
+
+
+main() {
+
+pthread_t thread_id,thread_id1,thread_id3,thread_id4;
+pthread_attr_t attr;
+int ret;
+void *res;
+pthread_rwlock_init(&rwlock,NULL);
+ret=pthread_create(&thread_id,NULL,&write,NULL);
+ret=pthread_create(&thread_id1,NULL,&read_1,NULL);
+
+ret=pthread_create(&thread_id3,NULL,&read_2,NULL);
+
+ret=pthread_create(&thread_id4,NULL,&write_2,NULL);
+printf("\n Created thread");
+pthread_join(thread_id,&res);
+pthread_join(thread_id1,&res);
+pthread_join(thread_id3,&res);
+
+pthread_join(thread_id4,&res);
+pthread_rwlock_destroy(&rwlock);
+}
+
+
+
+Save the above code as rw_lock.c
+
+Compile it using the -lpthread flag
+
+$ cc -lpthread rw_lock.c -o rw_lock
+$ ./rw_lock
+Created thread
+File locked, please enter the message
+Hello
+
+Unlocked the file you can read it now
+
+File locked, please enter the message
+World
+
+Unlocked the file you can read it now
+
+1 Opening file for reading
+
+Message from file is HelloWorld
+
+2 Opening file for reading
+
+Message from file is HelloWorld
+
+Unlocking rwlock
+
+
