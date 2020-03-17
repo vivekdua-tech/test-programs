@@ -9,6 +9,18 @@
 #include "test.h"
 
 
+// pointers to functions
+
+int sum (int a, int b) {
+    return a + b;
+}
+
+typedef int (*func_ptr_type)(int a, int b);
+
+
+
+
+
 
 // Write a program to print all lines which are greater than 80 chars
 int main() {
@@ -22,7 +34,7 @@ int main() {
     
     
     printf("%s %s %s\n", cptr[0], cptr[1], cptr[2]);
-    
+    /****
     while((read = getline(&line, &linesz, stdin)) != EOF) {
         // if size more than 80 print it
         if (read > 20) {
@@ -31,10 +43,14 @@ int main() {
             printf("%s", line);
         }
     }
-    int no = atoi("789");
-    printf("%d", no);
+    // int no = atoi("789");
+    // printf("%d", no);
     free(line);
+    ****/
     
+    func_ptr_type fp;
+    fp = sum;
     
+    printf("\n calling FP as sum %d", (*fp)(2, 3));
     
 }
