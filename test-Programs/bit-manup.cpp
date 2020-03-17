@@ -73,6 +73,12 @@ int numBitSwapRequired(int m, int n) {
     return numBitSet(m ^ n);
 }
 
+// Use ^ and & to add two integers
+
+int getSum(int a, int b) {
+    return b==0? a:getSum(a^b, (a&b)<<1); //be careful about the terminating condition;
+}
+
 int main ()
 {
     

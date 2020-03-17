@@ -139,6 +139,11 @@ public:
 };
 
 
+void func(std::promise<int> result_promise) noexcept
+{
+    result_promise.set_value(42);
+}
+
 int main() {
     
     number *n1 = new number(15);
@@ -157,5 +162,12 @@ int main() {
     
     // Promise and future example
     detect();
+    
+    
+    std::promise<int> result_promise;
+    std::future<int> result_future = result_promise.get_future();
+    std::thread t{func, std::move(result_promise)};
+    int result = result_future.get();
+    t.join();
 }
 

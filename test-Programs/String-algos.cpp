@@ -193,6 +193,54 @@ vector<vector<string>> groupAnagrams(vector<string>& strs) {
 }
 
 
+int lengthOfLongestSubstring(string s) {
+    vector<int> dict(256, -1);
+    int maxLen = 0, start = -1;
+    for (int i = 0; i != s.length(); i++) {
+        if (dict[s[i]] > start)
+            start = dict[s[i]];
+        dict[s[i]] = i;
+        maxLen = max(maxLen, i - start);
+    }
+    return maxLen;
+}
+
+class Solution {
+public:
+    
+    string removeslashatend(string path) {
+        string res = path;
+        while (res[res.length() - 1] == '/' && res.length() != 1) {
+            res = res.substr(0, res.length() -1);
+        }
+        return res;
+    }
+    
+    string removedotdotslash(string path) {
+        size_t pos = 0;
+        while ((pos = path.find("/..")) != string::npos) {
+            path.erase(pos, 3);
+        }
+        return path;
+    }
+    
+    string removedoubleslash(string path) {
+        size_t pos = 0;
+        while((pos = path.find("//")) != string::npos) {
+            path.erase(pos, 1);
+        }
+        return path;
+    }
+    
+    string simplifyPath(string path) {
+        string result = path;
+        result = removedotdotslash(result);
+        result = removedoubleslash(result);
+        result = removeslashatend(result);
+        return result;
+    }
+};
+
 int main() {
     
     string wordlist = "Do..not..try..this";
@@ -204,5 +252,10 @@ int main() {
     string str1 = "   John Smith  ";
     trim(str1);
     cout << str1 << endl;
+    
+    Solution s;
+    cout << "result is: " << s.simplifyPath("/a/../../b/../c//.//");
+    cout << "int is:" << round(3.71) << " " <<  round(3.41) << endl;
+    
     return 0;
 }

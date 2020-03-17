@@ -9,7 +9,6 @@
 #include <iostream>
 #include <vector>
 
-
 // Merge two sorted vectors and store the result in the third.
 
 using namespace std;

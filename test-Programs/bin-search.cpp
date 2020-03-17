@@ -66,8 +66,35 @@ int moveZerosToLeft (vector<int> &vec) {
 }
 
 
+
+class Solution {
+public:
+    int findMin(vector<int>& nums) {
+        
+        int high = nums.size() - 1;
+        int low = 0;
+        int mid = 0;
+        while (low <= high) {
+            int mid = (high + low)/2;
+            if (nums[mid] < nums[mid-1]) {
+                return nums[mid];
+            }
+            
+            if (nums[mid] > nums[low]) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+        return nums[mid];
+    }
+};
+
+
+
 int main(int argc, const char * argv[]) {
  
+#if 0
     std::vector<int> vec = {5, 2, 0, 6, 7, 0, 8, 3, 0};
     
     moveZerosToLeft(vec);
@@ -81,5 +108,10 @@ int main(int argc, const char * argv[]) {
          << tuple.first << " " << tuple.second
          << endl;
     
+#endif
+    
+    vector<int> nums = {3, 4, 5, 1, 2};
+    Solution s;
+    cout << "min element is:" << s.findMin(nums);
     return 0;
 }

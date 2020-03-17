@@ -19,6 +19,7 @@ class graph {
 public:
     
     std::list<int> _vertices;
+    // Adjacency : {{A : B, C}} B->A and C->A
     std::map<int, std::list<int>> _adj;
     
     graph(std::list<int>& vertices, std::map<int, std::list<int>>& adj) :

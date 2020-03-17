@@ -77,10 +77,18 @@ node* createBST<node>(int arr[], int low, int high) {
     return  midnode;
 }
 
+node*  BST::rightMostNode(node *root)
+{
+    node *node = root;
+    while (node->right) {
+        node = node->right;
+    }
+    return node;
+}
+
 
 node*  BST::leftMostNode(node *root)
 {
-    
     node *node = root;
     while (node->left) {
         node = node->left;
@@ -105,6 +113,8 @@ void BST::inOrderTraversal(node *root) {
 // for each node popped from the stack, push that node to the vector and then move to the
 // right sub-tree of the node.
 
+#ifdef CLEAN_IT_UP
+
 void BST::inorderTraversal (vector<int>& nodes, node* root) {
     stack<node*> todo;
     while (root || !todo.empty()) {
@@ -120,7 +130,36 @@ void BST::inorderTraversal (vector<int>& nodes, node* root) {
     return;
 }
 
+#endif
 
+
+
+node* BST::prevNode (node *root) {
+    // if the node has the left ST then return the right most node of the LST
+    // if no left ST, then traverse up the parent to get to the right node of the parent
+    node *node = root;
+    if (node->left) {
+        return rightMostNode(node->left);
+    } else {
+        while (node->parent && node->parent->left == node) {
+            node = node->parent;
+        }
+        return node;
+    }
+}
+
+// Get the 2nd largest element in the BST
+
+node* BST::getSecondLargestNode (node *root) {
+    // get to the largest element and then return the previous node
+    node *node = root;
+    // get the previous node
+    node = rightMostNode(node);
+    return prevNode(node);
+    // node is now either the root or the rightmost node
+    // now get the previous on this node
+    
+}
 // Write an algo to get the next node in the BST - Binary search tree.
 
 node* BST::nextNode (node *root) {
@@ -151,12 +190,31 @@ int getHeight(node *root) {
     return max(getHeight(root->left), getHeight(root->right)) + 1;
 }
 
+int getLength(TreeNode *root) {
+    if (!root) {
+        return 0;
+    }
+    int ld = getLength(root->left);
+    int rd = getLength(root->right);
+    maxlength = max(maxlength, ld + rd);
+    return max(ld, rd) + 1;
+}
+int diameterOfBinaryTree(TreeNode* root) {
+    
+    if (!root) {
+        return 0;
+    }
+    
+    getLength(root);
+    return maxlength;
+}
+
 bool isBalanced(node *root) {
     return std::abs(getHeight(root->left) - getHeight(root->right)) <= 1;
 }
 
 bool BST::isBST (node *root) {
-    return isBST(root, 0, 0);
+    return isBST(root, INT_MIN, INT_MAX);
 }
 bool BST::isBST (node *root, int min, int max) {
     // handle null case
@@ -164,12 +222,12 @@ bool BST::isBST (node *root, int min, int max) {
         return true;
     }
     // check for the min and max
-    if ((min && root->value < min) || (max && root->value >= max)) {
+    if ((root->value < min) || (root->value >= max)) {
         return false;
     }
     // recurse
     if (!isBST(root->left, min, root->value) ||
-        !isBST(root->right, root->value, max)) {
+        !isBST(root->right, root->value + 1, max)) {
         return false;
     }
     return true;
@@ -426,7 +484,7 @@ vector<vector<int>> levelOrder(node* root) {
     return finalvec;
 }
 
-
+#ifdef CLEAN_IT_UP
 
 node *buildTree (vector<int> &preorder, vector<int> &inorder) {
     // cache the inorder map of value to index: value->index
@@ -456,6 +514,7 @@ node *create(vector<int>& preorder, vector<int> &inorder, map<int, int>& iomap,
     return node;
 }
 
+#endif
 
 // Construct Binary Tree from Preorder and Inorder Traversal
 
@@ -496,12 +555,59 @@ The first element in preorder array can divide inorder array into two parts.
  
 **********************************************************************************/
 
+/*******************Connec the next pointers for each node **************/
+
+void connect(Node *root) {
+    if (root == NULL) return;
+    Node *pre = root;
+    Node *cur = NULL;
+    while(pre->left) {
+        cur = pre;
+        while(cur) {
+            cur->left->next = cur->right;
+            if(cur->next) cur->right->next = cur->next->left;
+            cur = cur->next;
+        }
+        pre = pre->left;
+    }
+}
+
+
+
+class Solution {
+public:
+    void verticalOrder(TreeNode *root, vector<vector<int>> &result, int &level) {
+        
+        if (!root) {
+            level = -1;
+            return;
+        }
+        verticalOrder(root->left, result, level);
+        level++;
+        if (level < result.size()) {
+            vector<int> &vec = result[level];
+            vec.push_back(root->val);
+        } else {
+            vector<int> vec;
+            vec.push_back(root->val);
+            result.push_back(vec);
+        }
+        verticalOrder(root->right, result, level);
+        level++;
+    }
+    
+    vector<vector<int>> verticalOrder(TreeNode* root) {
+        vector<vector<int>> result;
+        int level = 0;
+        verticalOrder(root, result, level);
+    }
+};
 
 
 
 int main() {
     
-    int arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+    int arr[] = {0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11};
     vector<int> nums = {-10,-3,0,5,9};
     dllnode *head = NULL;
     node *root = createBST<node>(arr, 0, 10);

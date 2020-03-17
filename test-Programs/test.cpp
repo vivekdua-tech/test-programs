@@ -14,8 +14,6 @@
 #include <queue>
 
 
-
-
 using namespace std;
 
 unordered_map<string,string> mapStr;
@@ -138,8 +136,12 @@ int main()
     // template <class ForwardIterator, class UnaryPredicate>
     // ForwardIterator remove_if (ForwardIterator first, ForwardIterator last,
     //                           UnaryPredicate pred);
+    
     // remove_if: Transforms the range [first,last) into a range with all the elements for which pred returns true removed,
     // and returns an iterator to the new end of that range.
+    // The removal is done by replacing the elements for which pred returns true by the next element for which it does not,
+    // and signaling the new size of
+    // the shortened range by returning an iterator to the element that should be considered its new past-the-end element.
     
     // transform: Applies an operation sequentially to the elements of range inputted and stores the
     // result in the range that begins at result which is inputted.

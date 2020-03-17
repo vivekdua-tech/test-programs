@@ -8,6 +8,8 @@
 
 #include <iostream>
 #include <queue>
+#include <map>
+#include <algorithm>
 
 
 
@@ -51,6 +53,19 @@ public:
     }
 };
 
+
+// Given N candies of different type, mary has to given N/2 of them to her sister such that she has
+// left with it maximum number of different types of candies. N is even. What is the max type she can have
+// T = [5, 6, 7, 7, 7, 8, 9, 8]
+// 8/2 she has to give 4 so she can give 7, 7, 8, 9. she can then have 5, 6, 7, 8,
+
+unsigned maxdifftype (vector<int> &T) {
+   // Put the elements in Set
+    //  and then return min(set.size(), N/2);
+    return 0;
+}
+
+
 // Driver code
 int main ()
 {
@@ -70,6 +85,10 @@ int main ()
         cout << endl;
         pq.pop();
     }
+    
+    vector<int> vec = {5, 6, 7, 7, 7, 8, 8, 9, 7, 7, 7, 8};
+    
+    cout << "maxdiff type is:" << maxdifftype(vec);
     
     return 0;
 }
