@@ -9,6 +9,7 @@
 #include <stdio.h>
 
 
+#if 0
 
 typedef struct {
     
@@ -79,6 +80,41 @@ error:
     }
     return NULL;
 }
+
+#endif
+
+int main() {
+    
+    int **temp = NULL;
+    
+    temp = (int **) calloc(sizeof(int *), 10);
+    for (int i = 0; i < 10; i++) {
+        temp[i] = calloc(sizeof(int), 10);
+    }
+    
+    for (int i = 0; i < 10; i++) {
+        for (int j = 0; j < 10; j++) {
+            temp[i][j] = 1;
+        }
+    }
+    for (int i = 0; i < 10; i++) {
+        for (int j = 0; j < 10; j++) {
+            printf(" %d", temp[i][j]);
+        }
+        printf("\n");
+    }
+    for (int i = 0; i < 10; i++) {
+        temp[i] = realloc(temp[i], 15 * sizeof(int));
+    }
+    for (int i = 0; i < 10; i++) {
+        for (int j = 0; j < 15; j++) {
+            printf(" %d", temp[i][j]);
+        }
+        printf("\n");
+    }
+    return 0;
+}
+
 
 
 

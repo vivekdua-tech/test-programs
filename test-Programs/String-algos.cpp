@@ -178,13 +178,7 @@ vector<vector<string>> groupAnagrams(vector<string>& strs) {
         string tempstr = s;
         sort(tempstr.begin(), tempstr.end());
         auto it = anamap.find(tempstr);
-        if (it != anamap.end()) {
-            it->second.push_back(s);
-        } else {
-            vector<string> vstr;
-            vstr.push_back(s);
-            anamap.insert(pair<string, vector<string>&>(tempstr, vstr));
-        }
+        anamap[tempstr].push_back(s);
     }
     for (auto p : anamap) {
         res.push_back(p.second);

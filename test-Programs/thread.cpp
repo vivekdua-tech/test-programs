@@ -9,6 +9,8 @@
 #include <iostream>
 #include <deque>
 #include <thread>
+#include <mutex>
+#include <condition_variable>
 
 
 using namespace std;
@@ -39,9 +41,10 @@ public:
         return _queue.empty();
     }
     
+    
     void pop (T& popped_value) {
         std::unique_lock<std::mutex> lock(_mutex);
-        _cond.wait(lock, [this] { return !_queue.empty(); } );
+        _cond.wait(lock, [this]{ return !(this->isEmpty()); });
         popped_value = _queue.back();
         cout << "popped value is " << popped_value;
         _queue.pop_back();
@@ -58,6 +61,7 @@ public:
         queue.push(20);
         queue.push(30);
     }
+    
 };
 
 class consumer {
@@ -73,6 +77,7 @@ public:
         queue.pop(value);
         cout << "value is " << value;
     }
+    
 };
 
 
@@ -81,11 +86,16 @@ int main() {
     
     concurrentQueue<int> queue;
     
-    std::thread t1(&producer::run, producer(), queue);
-    std::thread t2(&consumer::run, consumer(), queue);
+    producer p;
+    consumer c;
+    
+    std::thread t2(&consumer::run, &c, ref(queue));
+    std::thread t1(&producer::run, &p, ref(queue));
+    
     
     if (t1.joinable()) t1.join();
     if (t2.joinable()) t2.join();
     
     return 0;
 }
+

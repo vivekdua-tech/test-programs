@@ -54,13 +54,24 @@ public:
 };
 
 
+namespace std {
+    template <>
+    struct greater<Point> {
+        int operator() (const Point& p1, const Point& p2) {
+            return p1.getX() > p2.getX();
+        }
+    };
+}
+
+
+
 // Given N candies of different type, mary has to given N/2 of them to her sister such that she has
 // left with it maximum number of different types of candies. N is even. What is the max type she can have
 // T = [5, 6, 7, 7, 7, 8, 9, 8]
 // 8/2 she has to give 4 so she can give 7, 7, 8, 9. she can then have 5, 6, 7, 8,
 
 unsigned maxdifftype (vector<int> &T) {
-   // Put the elements in Set
+    // Put the elements in Set
     //  and then return min(set.size(), N/2);
     return 0;
 }
@@ -70,7 +81,7 @@ unsigned maxdifftype (vector<int> &T) {
 int main ()
 {
     // Creates a Min heap of points (order by x coordinate)
-    priority_queue <Point, vector<Point>, myComparator > pq;
+    priority_queue <Point, vector<Point>, greater<Point>> pq;
     
     // Insert points into the min heap
     pq.push(Point(10, 2));

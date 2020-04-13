@@ -46,20 +46,12 @@ public:
 
 void count (int n, way pway, map<way, int> &wayMap) {
     
-    
     way  currentWay = pway;
-    
     if (n == 0) {
-        auto it = wayMap.find(pway);
-        if (it == wayMap.end()) {
-            // add it now
-            wayMap.insert(pair<way, int>(pway, 1));
-        } else {
-            it->second++;
-        }
+        wayMap[pway]++;
         return;
     }
-
+    
     if (n >= 1) {
         // 1-cent added
         currentWay.c++;

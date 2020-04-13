@@ -22,7 +22,7 @@ void* sum_runner(void *arg) {
     for (long long i = 0; i <= limit; i++) {
         sum += i;
     }
-    pthread_exit(0);
+    pthread_exit(&sum);
 }
 
 char* getString() {
@@ -40,7 +40,7 @@ int main (int argc, char *argv[])
         exit(-1);
     }
     long long limit = atoll(argv[1]);
-    
+    long long *s = NULL;
     //thread id
     pthread_t tid;
     
@@ -52,8 +52,8 @@ int main (int argc, char *argv[])
     pthread_create(&tid, &attr, sum_runner, &limit);
     
     // wait till we join
-    pthread_join(tid, NULL);
-    printf("Sum is %lld\n", sum);
+    pthread_join(tid, (void **)&s);
+    printf("Sum is %lld\n", *s);
     
     printf("\n %s", getString());
 }

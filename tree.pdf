@@ -1,0 +1,47 @@
+//
+//  tree.cpp
+//  test-Programs
+//
+//  Created by Vivek Dua on 5/7/18.
+//  Copyright © 2018 Vivek Dua. All rights reserved.
+//
+
+#include <iostream>
+
+
+
+
+
+class node {
+public:
+    node *left;
+    node *right;
+    
+    int data;
+};
+
+
+bool isBST (node *root) {
+    
+    bool flag = true;
+    
+    if (!root) {
+        return false;
+    }
+    
+    if (root->left != NULL) {
+        if (root->left->data > root->data) {
+            return false;
+        }
+    }
+    if (root->right != NULL) {
+        if (root->right->data < root->data) {
+            return false;
+        }
+    }
+    
+    bool leftflag =  (root->left != NULL) ?  isBST(root->left) : true;
+    bool rightflag =  (root->right != NULL) ? isBST(root->right) : true;
+    
+    return leftflag && rightflag;
+}
