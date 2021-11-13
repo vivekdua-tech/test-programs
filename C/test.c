@@ -19,6 +19,12 @@ typedef int (*func_ptr_type)(int a, int b);
 
 
 
+struct _match {
+    int a;
+    int b;
+} matchLen[] = {
+    
+};
 
 
 
