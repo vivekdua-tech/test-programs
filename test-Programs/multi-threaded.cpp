@@ -12,6 +12,7 @@
 #include <array>
 #include <future>
 #include <vector>
+#include <map>
 
 
 using namespace std;
@@ -171,3 +172,63 @@ int main() {
     t.join();
 }
 
+
+// static singleton instances are inherently thread-safe.
+// Just like singleton, if we want to make a function/non-static variable behave like singleton
+// which is called once and is thread, use std::once_flag
+
+
+// Just like static initialization of singleton class, we want logger to init the
+// connection ONLY once. Without getting in mutex complexity, we can have once_flag which
+// implicitly makes sure that class variable thread-safe..
+//
+
+class NetworkConnection;
+
+class Logger {
+    std::once_flag _once;
+    NetworkConnection _conn;
+    
+    NetworkConnection& getConn() {
+        std:call_once(_once, [&]() {
+            _conn = NetworkConnection(defaultHost);
+        });
+        return *_conn;
+    }
+};
+
+
+// Equivalent of pthread_rw_lock - Read/Write lock - Separate locks for read and writes
+// std::shared_mutex
+// mutable std::shared_mutex rw_;
+// Can be used to to read or write locks
+
+class ThreadSafeConfig {
+    std::map<std::string, int> settings_;
+    mutable  std::shared_mutex rw_;
+    
+    void set(const string& name, int value) {
+        unique_lock<shared_mutex> lk(rw_); // Write Lock
+        settings_.insert(name, value);
+    }
+    int get(const string& name) const {
+        shared_lock<shared_mutex> lk(rw_); // Read lock
+        return settings_.at(name);
+    }
+}
+
+
+
+// C++11 Promise/Future - Single shot promise and future paradigm -
+// async returns std::promise which can be called with get_future()
+std::future<int> f1 = std::async(std::launch::async, []() {
+    puts("Hello from thread A");
+    return 1;
+});
+
+std::future<int> f2 = std::async(std::launch::async, []() {
+    puts("Hello from thread B");
+    return 1;
+});
+
+int result = f1.get() + f2.get();

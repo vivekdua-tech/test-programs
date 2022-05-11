@@ -41,6 +41,24 @@ int partition (int arr[], int low, int high)
     return small_bucket_index + 1;
 }
 
+
+/******
+ Partition sub routine when pivot is the first element in the array
+ 
+ Parition(arr, int low, int high) {
+ // low is the pivot
+ pivot = arr[low]
+   // i is the index of the smaller buclet
+   // j is the index of the bigger bucket
+  i = low + 1
+  for j = (Low + 1) to high:
+        if (arr[j] < pivot )
+            // swap this element with the end of the smaller bucket
+            swap(arr[j], arr[i])
+            i = i + 1 // increment the smaller bukcet index
+ swap( arr[low], arr[i - 1])
+ */
+
 void printArray(int arr[], int size);
 
 // Given arr[] unsorted list of numbers, sort the numbers using quicksort.

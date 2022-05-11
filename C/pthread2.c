@@ -10,13 +10,13 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <string.h>
-#include <time.h>
+#include <sys/time.h>
 
 // counting up and counting down threads - one counts up and the other counts down
 
 int sum = 0;
 
-#define NUM_LOOPS 10000000
+#define NUM_LOOPS 100
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 

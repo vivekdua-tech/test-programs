@@ -113,11 +113,15 @@ const char * Rational::c_str() const {
 
 int main( int argc, char ** argv ) {
     
+    printf("Rational a = 7\n");
     Rational a = 7;     // 7/1
+    printf("Rational b(5, 3)\n");
     Rational b(5, 3);   // 5/3
+    printf("Rational c = b\n");
     Rational c = b;     // copy ctor
+    printf("Rational d = move(c)\n");
     Rational d = std::move(c);
-    
+    printf("d = b\n");
     d = b;
     
     printf("a is: %s\n", a.c_str());

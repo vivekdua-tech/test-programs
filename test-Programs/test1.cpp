@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 #include <queue>
+#include <algorithm>
 
 
 
@@ -144,6 +145,21 @@ public:
 
 
 
+class A {
+    
+public:
+    
+    enum class B {
+        IP1,
+        IP2
+    };
+    
+};
+
+
+
+
+
 int main() {
     
     Professor p1, p2, p3;
@@ -154,6 +170,11 @@ int main() {
     Solution s;
     vector<vector<int>> preq = {{1,0},{2,0},{3,1},{3,2}};
     s.findOrder(4, preq);
+    
+    using v = A::B;
+    int i = static_cast<int>(v::IP1);
+    std::cout << i;
+    
     
     return 0;
 }

@@ -8,7 +8,6 @@
 
 #include <stdio.h>
 
-
 #if 0
 
 typedef struct {
@@ -22,11 +21,47 @@ typedef struct {
 } darray;
 
 
+
 darray *darray_create(size_t element_size, int initial_max);
 int    darray_push   (darray *array, void *element);
 void  *darray_pop    (darray *array);
 void  *darray_get    (darray *array, int i);
 void  *darray_remove (darray *array);
+
+darray *darray_create(size_t elem_size, size_t initial_max) {
+    darray *array = malloc(sizeof(darray));
+    
+    array->max = initial_max;
+    array->contents = calloc(initial_max, sizeof(void *));
+    array->element_size = elem_size;
+    return array;
+    
+error:
+    if (array) {
+        free(array);
+    }
+    return NULL;
+}
+
+int darray_push(darray *array, void *el) {
+    array->contents[array->end] = el;
+    array->end++;
+    
+    if (darray_end(array) >= darray_max(array)) {
+        return darray_expand(array);
+    } else {
+        return 0;
+    }
+}
+
+void *darray_pop(darray *array) {
+    
+    
+
+
+    
+}
+
 
 
 typedef int (*hashmap_compare) (void *a, void *b);
@@ -34,7 +69,7 @@ typedef int (*hashmap_hash) (void *key);
 
 
 typedef struct {
-    darray *buckets;
+    darray *buckets; // darray of buckets and each bucket is a darray of hashmapnodes
     hashmap_hash hash;
     hashmap_compare compare;
 } hashmap;
@@ -42,11 +77,37 @@ typedef struct {
 typedef struct {
     void *key;
     void *data;
-    unsigned char hash;
+    uint32_t hash;
 } hashmap_node;
 
 
 typedef int (*hashmap_traverse_cb)(hashmap_node *node);
+
+
+hashmap *hashmap_create(hashmap_compare compare,
+                        hashmap_hash    hash_fn);
+void hashmap_destroy(hashmap *map);
+int  hashmap_set(hashmap *map, void *key, void *data);
+void *hashmap_get(hashmap *map, void *key);
+void *hashmap_delete(hashmap *map, void *key);
+
+
+
+int hashmap_set (hashmap *map, void *key, void *data) {
+    
+    uint32_t hash = hash_key(void *data);
+    int bucket = hash % DEFAULT_NUM_OF_BUCKETS;
+    darray *bucket = darray_get(map->buckets, bucket_n);
+    hashmap_node *node = calloc(1, sizeof(hashmap_node));
+    node->key = key;
+    node->data = data;
+    darray_push(bucket, node);
+    return 0;
+}
+
+
+
+
 
 
 

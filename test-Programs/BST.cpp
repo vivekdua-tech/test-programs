@@ -1,32 +1,41 @@
 //
-//  graph.cpp
+//  bst.cpp
 //  test-Programs
 //
-//  Created by Vivek Dua on 4/10/18.
-//  Copyright © 2018 Vivek Dua. All rights reserved.
+//  Created by vidua on 3/20/20.
+//  Copyright © 2020 Vivek Dua. All rights reserved.
 //
 
 #include <iostream>
-#include <map>
-#include <vector>
-#include <unordered_map>
-#include <queue>
-
 
 using namespace std;
 
 class node {
-
+    
 public:
     
     node *left;
     node *right;
-    node *parent;
     int value;
     int hd; // horizontal distance required for vertical traversal
     
-    node(int val) : value(val), left(nullptr), right(nullptr), parent(nullptr) {};
+    node(int val) : value(val), left(nullptr), right(nullptr) {};
 };
+
+template <typename T>
+T* createBST(int arr[], int low, int high) {
+    if (low > high) return nullptr;
+    
+    int mid = (low + high)/ 2;
+    T *midnode = new T(arr[mid]);
+    
+    T *leftnode = createBST<T>(arr, low, mid - 1);
+    T *rightnode = createBST<T>(arr, mid + 1, high);
+    midnode->left = leftnode;
+    midnode->right = rightnode;
+    return midnode;
+}
+
 
 class BST {
 public:
@@ -603,6 +612,40 @@ public:
     }
 };
 
+// Given edges : {{'a','b'}, {'a','d'}, {'b','c'}} ,Contruct a binary tree.
+// Explain: {parent, child} , {a ,b} , b's parent node is a.
+
+namespace GGPhone {
+    struct TreeNode {
+        char val;
+        TreeNode* left;
+        TreeNode* right;
+        TreeNode(int v) : val(v), left(nullptr), right(nullptr) {}
+    };
+
+    TreeNode* build(vector<vector<char>>& edges) {
+        vector<int> degree(26, -1);
+        vector<TreeNode*> dict(26, nullptr);
+        for (auto& edge : edges) {
+            char& parent = edge[0], child = edge[1];
+            if (degree[parent - 'a'] == -1) degree[parent - 'a'] = 0;
+            if (degree[child - 'a'] == -1) degree[child - 'a'] = 0;
+            degree[child - 'a']++;
+            if (!dict[parent - 'a']) dict[parent - 'a'] = new TreeNode(parent);
+            if (!dict[child - 'a']) dict[child - 'a'] = new TreeNode(child);
+            if (!dict[parent - 'a']->left)
+                dict[parent - 'a']->left = dict[child - 'a'];
+            else
+                dict[parent - 'a']->right = dict[child - 'a'];
+        }
+        for (int i = 0; i < 26; ++i) {
+            if (degree[i] == 0)
+                return dict[i];
+        }
+        return nullptr;
+    }
+}
+
 
 
 int main() {
@@ -638,4 +681,67 @@ int main() {
         cout << "]" << endl;
     }
     
+}
+
+
+
+
+class Solution {
+public:
+    
+private:
+    node *prev = NULL;
+public:
+    
+    void toDLL(node *root, node **head) {
+        
+        if (!root) return;
+        
+        toDLL(root->left, head);
+        if (!prev) {
+            *head = root;
+        } else if (prev) {
+            prev->right = root;
+        }
+        if (root) {
+            root->left = prev;
+        }
+        prev = root;
+        toDLL(root->right, head);
+    }
+    
+    node* treeToDoublyList(node* root) {
+        node *head = NULL;
+        toDLL(root, &head);
+        return head;
+    }
+    
+    void dlltraverse (node *head) {
+        if (head) {
+            cout << " " << head->value;
+        }
+        node *temp = head->right;
+        while (temp && temp != head) {
+            cout << " " << temp->value;
+            temp = temp->right;
+        }
+    }
+    
+};
+
+
+
+
+
+
+
+int main() {
+    
+    int arr[] = {4, 2, 5, 1, 3};
+    node *root = createBST<node>(arr, 0, 4);
+    // BST to DLL
+    Solution s;
+    node *head = s.treeToDoublyList(root);
+    s.dlltraverse(head);
+    return 0;
 }

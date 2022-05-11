@@ -93,7 +93,41 @@ int main() {
     
 }
 
+/**********************************************************************************************
+Now the strategy is here:
 
+Add coins one-by-one, starting from base case "no coins".
+
+For each added coin, compute recursively the number of combinations for each amount of money from 0 to amount.
+
+Algorithm
+
+Initiate number of combinations array with the base case "no coins": dp[0] = 1, and all the rest = 0.
+
+Loop over all coins:
+
+For each coin, loop over all amounts from 0 to amount:
+
+For each amount x, compute the number of combinations: dp[x] += dp[x - coin].
+Return dp[amount].
+
+********************************************************/
+
+int change(int amount, int[] coins) {
+    int[] dp = new int[amount + 1];
+    dp[0] = 1; // one combination for amount = 0 , no coin {0,0,0}
+
+    for (int coin : coins) {
+      for (int x = coin; x < amount + 1; ++x) {
+        dp[x] += dp[x - coin];
+      }
+    }
+    return dp[amount];
+  }
+}
+
+
+ 
 // You are climbing a stair case. It takes n steps to reach to the top.
 
 // Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?

@@ -41,7 +41,6 @@ public:
         return _queue.empty();
     }
     
-    
     void pop (T& popped_value) {
         std::unique_lock<std::mutex> lock(_mutex);
         _cond.wait(lock, [this]{ return !(this->isEmpty()); });

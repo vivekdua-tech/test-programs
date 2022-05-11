@@ -74,6 +74,12 @@ int numBitSwapRequired(int m, int n) {
 }
 
 // Use ^ and & to add two integers
+// here XOR is a key as well because it's a sum of two integers in the binary form without
+// taking carry into account. (x ^ y) = answer w/o carry
+// carry=(x&y)<<1
+// Keep doing the same bit operations till you get NO CARRY.
+
+
 
 int getSum(int a, int b) {
     return b==0? a:getSum(a^b, (a&b)<<1); //be careful about the terminating condition;
@@ -124,6 +130,76 @@ int getSum(int a, int b) {
  
  ********************************************************************/
  
+
+#if 0
+
+// Divide two integers w/o using division or multiplication
+ 
+ List<Integer> doubles = new ArrayList<>();
+ List<Integer> powersOfTwo = new ArrayList<>();
+
+ int powerOfTwo = 1;
+
+ /* Nothing too exciting here, we're just making a list of doubles of 1 and
+  * the divisor. This is pretty much the same as Approach 2, except we're
+  * actually storing the values this time. */
+ while (divisor <= dividend) {
+     powersOfTwo.add(powerOfTwo);
+     doubles.add(divisor);
+     powerOfTwo += powerOfTwo;
+     divisor += divisor;
+ }
+
+ int quotient = 0;
+ /* Go from largest double to smallest, checking if the current double fits.
+  * into the remainder of the dividend */
+ for (int i = doubles.size() - 1; i >= 0; i--) {
+     if (doubles[i] <= dividend) {
+         // If it does fit, add the current powerOfTwo to the quotient.
+         quotient += powersOfTwo.get(i);
+         // Update dividend to take into account the bit we've now removed.
+         dividend -= doubles.get(i);
+     }
+ }
+
+#endif // 0
+
+
+
+
+#if 0
+
+
+// Given an integer array nums where every element appears three times except for one, which appears exactly once. Find the single element and return it.
+//
+
+class Solution {
+  public int singleNumber(int[] nums) {
+    int seenOnce = 0, seenTwice = 0;
+
+    for (int num : nums) {
+      // first appearence:
+      // add num to seen_once
+      // don't add to seen_twice because of presence in seen_once
+
+      // second appearance:
+      // remove num from seen_once
+      // add num to seen_twice
+
+      // third appearance:
+      // don't add to seen_once because of presence in seen_twice
+      // remove num from seen_twice
+      seenOnce = ~seenTwice & (seenOnce ^ num);
+      seenTwice = ~seenOnce & (seenTwice ^ num);
+    }
+
+    return seenOnce;
+  }
+}
+
+#endif
+
+
 
 int main ()
 {

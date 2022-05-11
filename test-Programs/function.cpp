@@ -30,8 +30,8 @@ int substraction(int &x, int &y) {
 }
 
 //
- // @brief Returns the number of trailing zeros for the given num
- //
+// @brief Returns the number of trailing zeros(bit rep) for the given num
+//
 uint16_t getTrailingZero(uint32_t num) {
     if (num & 0x1) {
         return 0;
@@ -121,12 +121,6 @@ int main() {
     
     std::shared_ptr<int> s3 = s1;
     s3 = s2;
-    
-    
-    
-    
-    
-    
     
     
 #if 0
